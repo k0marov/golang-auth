@@ -1,0 +1,3 @@
+[{"Id":"258960f0-e0c7-11ec-993b-beb85ec8108d","Username":"Sam","StoredPass":"$2a$10$3d5SCOAs/5fScssDSUflCe33BEEufYgqJLEd1My0e758RjnOH8GGK","AuthToken":{"Token":"25895e84-e0c7-11ec-993b-beb85ec8108d"}}
+, {"Id":"4a8876f2-e0c7-11ec-8ef2-beb85ec8108d","Username":"Alice","StoredPass":"$2a$10$O1vCoq/YlcUX2OUs8RgoHeyqbToyw7KAIzh8J8T2f1JDe4xtpFBHe","AuthToken":{"Token":"4a887508-e0c7-11ec-8ef2-beb85ec8108d"}}
+]
