@@ -93,38 +93,3 @@ func (p *PersistentInMemoryFileStore) UserExists(username string) bool {
 	_, exists := p.usernameToUser[username]
 	return exists
 }
-
-type InMemoryAuthStore struct {
-	users []entities.StoredUser
-}
-
-func (i *InMemoryAuthStore) UserExists(username string) bool {
-	for _, user := range i.users {
-		if user.Username == username {
-			return true
-		}
-	}
-	return false
-}
-
-func (i *InMemoryAuthStore) CreateUser(username string, password string, token entities.Token) {
-	i.users = append(i.users, entities.StoredUser{Username: username, StoredPass: password, AuthToken: token})
-}
-
-func (i *InMemoryAuthStore) FindUser(username string) (entities.StoredUser, error) {
-	for _, user := range i.users {
-		if user.Username == username {
-			return user, nil
-		}
-	}
-	return entities.StoredUser{}, auth_store_contract.UserNotFoundErr
-}
-
-func (i *InMemoryAuthStore) FindUserFromToken(token string) (entities.StoredUser, error) {
-	for _, user := range i.users {
-		if user.AuthToken.Token == token {
-			return user, nil
-		}
-	}
-	return entities.StoredUser{}, token_store_contract.TokenNotFoundErr
-}
