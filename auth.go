@@ -1,16 +1,17 @@
 package auth
 
 import (
-	"auth/internal/core/crypto/bcrypt_hasher"
-	"auth/internal/data/store"
-	"auth/internal/data/store/db_file_interactor_impl"
-	"auth/internal/delivery/server"
-	"auth/internal/delivery/token_auth_middleware"
-	"auth/internal/domain/auth_service"
-	"auth/internal/domain/entities"
 	"errors"
 	"fmt"
 	"os"
+
+	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
+	"github.com/k0marov/golang-auth/internal/data/store"
+	"github.com/k0marov/golang-auth/internal/data/store/db_file_interactor_impl"
+	"github.com/k0marov/golang-auth/internal/delivery/server"
+	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
+	"github.com/k0marov/golang-auth/internal/domain/auth_service"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 func NewStoreImpl(dbFileName string) (*store.PersistentInMemoryFileStore, error) {

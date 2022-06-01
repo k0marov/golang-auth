@@ -1,17 +1,18 @@
 package server_test
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/delivery/server"
-	"auth/internal/domain/entities"
-	. "auth/internal/test_helpers"
-	"auth/internal/values"
 	"bytes"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/delivery/server"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 type spyAuthService struct {

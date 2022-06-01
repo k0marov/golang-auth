@@ -1,13 +1,14 @@
 package server
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/domain/entities"
-	"auth/internal/values"
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 type AuthService interface {

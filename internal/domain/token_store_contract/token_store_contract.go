@@ -1,8 +1,9 @@
 package token_store_contract
 
 import (
-	"auth/internal/domain/entities"
 	"errors"
+
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 type TokenStore interface {

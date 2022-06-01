@@ -1,14 +1,15 @@
 package token_auth_middleware
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/domain/entities"
-	"auth/internal/domain/token_store_contract"
 	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
 )
 
 func NewTokenAuthMiddleware(tokenStore token_store_contract.TokenStore) *TokenAuthMiddleware {

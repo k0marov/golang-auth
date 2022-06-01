@@ -1,10 +1,11 @@
 package bcrypt_hasher_test
 
 import (
-	"auth/internal/core/crypto/bcrypt_hasher"
-	. "auth/internal/test_helpers"
 	"testing"
 	"testing/quick"
+
+	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestBcryptHasher(t *testing.T) {

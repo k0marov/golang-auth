@@ -1,13 +1,14 @@
 package store_test
 
 import (
-	"auth/internal/data/store"
-	"auth/internal/domain/auth_store_contract"
-	"auth/internal/domain/entities"
-	"auth/internal/domain/token_store_contract"
-	. "auth/internal/test_helpers"
 	"errors"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/data/store"
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 type StubDBFileInteractor struct {

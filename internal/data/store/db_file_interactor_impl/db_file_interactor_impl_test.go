@@ -1,14 +1,15 @@
 package db_file_interactor_impl_test
 
 import (
-	"auth/internal/data/store/db_file_interactor_impl"
-	"auth/internal/domain/entities"
-	. "auth/internal/test_helpers"
 	"errors"
 	"io"
 	"os"
 	"sync"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/data/store/db_file_interactor_impl"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestFileInteractor(t *testing.T) {

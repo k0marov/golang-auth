@@ -1,13 +1,14 @@
 package db_file_interactor_impl
 
 import (
-	"auth/internal/domain/entities"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"sync"
+
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 type sizeGetter interface {

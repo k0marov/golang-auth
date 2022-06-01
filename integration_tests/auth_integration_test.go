@@ -1,21 +1,22 @@
 package auth_integration_test
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/core/crypto/bcrypt_hasher"
-	"auth/internal/data/store"
-	"auth/internal/data/store/db_file_interactor_impl"
-	"auth/internal/delivery/server"
-	"auth/internal/delivery/token_auth_middleware"
-	"auth/internal/domain/auth_service"
-	"auth/internal/domain/entities"
-	. "auth/internal/test_helpers"
-	"auth/internal/values"
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
+	"github.com/k0marov/golang-auth/internal/data/store"
+	"github.com/k0marov/golang-auth/internal/data/store/db_file_interactor_impl"
+	"github.com/k0marov/golang-auth/internal/delivery/server"
+	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
+	"github.com/k0marov/golang-auth/internal/domain/auth_service"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 
 	"golang.org/x/crypto/bcrypt"
 )

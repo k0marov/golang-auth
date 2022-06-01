@@ -1,14 +1,15 @@
 package auth_service_test
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/domain/auth_service"
-	"auth/internal/domain/auth_store_contract"
-	"auth/internal/domain/entities"
-	. "auth/internal/test_helpers"
-	"auth/internal/values"
 	"errors"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/auth_service"
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 type StubAuthStore struct {

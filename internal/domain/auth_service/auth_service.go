@@ -1,13 +1,14 @@
 package auth_service
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/domain/auth_store_contract"
-	"auth/internal/domain/entities"
-	"auth/internal/values"
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/values"
 
 	"github.com/google/uuid"
 )

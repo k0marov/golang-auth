@@ -1,11 +1,12 @@
 package store
 
 import (
-	"auth/internal/domain/auth_store_contract"
-	"auth/internal/domain/entities"
-	"auth/internal/domain/token_store_contract"
 	"errors"
 	"fmt"
+
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
 
 	"github.com/google/uuid"
 )

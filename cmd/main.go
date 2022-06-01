@@ -1,9 +1,10 @@
 package main
 
 import (
-	"auth"
 	"log"
 	"net/http"
+
+	auth "github.com/k0marov/golang-auth"
 )
 
 const HashCost = 10

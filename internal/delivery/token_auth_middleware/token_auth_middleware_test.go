@@ -1,15 +1,16 @@
 package token_auth_middleware_test
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/delivery/token_auth_middleware"
-	"auth/internal/domain/entities"
-	"auth/internal/domain/token_store_contract"
-	. "auth/internal/test_helpers"
 	"errors"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestTokenAuthMiddleware(t *testing.T) {

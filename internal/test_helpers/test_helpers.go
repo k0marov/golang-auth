@@ -1,8 +1,6 @@
 package test_helpers
 
 import (
-	"auth/internal/core/client_errors"
-	"auth/internal/domain/entities"
 	"encoding/json"
 	"io/ioutil"
 	"math/rand"
@@ -10,6 +8,9 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 func Assert[T any](t testing.TB, got, want T, description string) bool {
