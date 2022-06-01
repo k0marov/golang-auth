@@ -1,11 +1,11 @@
 package store_test
 
 import (
-	"auth/data/store"
-	"auth/domain/auth_store_contract"
-	"auth/domain/entities"
-	"auth/domain/token_store_contract"
-	. "auth/test_helpers"
+	"auth/internal/data/store"
+	"auth/internal/domain/auth_store_contract"
+	"auth/internal/domain/entities"
+	"auth/internal/domain/token_store_contract"
+	. "auth/internal/test_helpers"
 	"errors"
 	"testing"
 )

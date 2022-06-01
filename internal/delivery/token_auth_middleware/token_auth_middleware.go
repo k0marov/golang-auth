@@ -1,9 +1,9 @@
 package token_auth_middleware
 
 import (
-	"auth/core/client_errors"
-	"auth/domain/entities"
-	"auth/domain/token_store_contract"
+	"auth/internal/core/client_errors"
+	"auth/internal/domain/entities"
+	"auth/internal/domain/token_store_contract"
 	"bytes"
 	"context"
 	"encoding/json"

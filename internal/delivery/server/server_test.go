@@ -1,11 +1,11 @@
 package server_test
 
 import (
-	"auth/core/client_errors"
-	"auth/delivery/server"
-	"auth/domain/entities"
-	. "auth/test_helpers"
-	"auth/values"
+	"auth/internal/core/client_errors"
+	"auth/internal/delivery/server"
+	"auth/internal/domain/entities"
+	. "auth/internal/test_helpers"
+	"auth/internal/values"
 	"bytes"
 	"encoding/json"
 	"errors"

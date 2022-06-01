@@ -1,7 +1,7 @@
 package token_store_contract
 
 import (
-	"auth/domain/entities"
+	"auth/internal/domain/entities"
 	"errors"
 )
 

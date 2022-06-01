@@ -1,9 +1,9 @@
 package server
 
 import (
-	"auth/core/client_errors"
-	"auth/domain/entities"
-	"auth/values"
+	"auth/internal/core/client_errors"
+	"auth/internal/domain/entities"
+	"auth/internal/values"
 	"bytes"
 	"encoding/json"
 	"net/http"

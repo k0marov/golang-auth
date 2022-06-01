@@ -1,9 +1,9 @@
 package db_file_interactor_impl_test
 
 import (
-	"auth/data/store/db_file_interactor_impl"
-	"auth/domain/entities"
-	. "auth/test_helpers"
+	"auth/internal/data/store/db_file_interactor_impl"
+	"auth/internal/domain/entities"
+	. "auth/internal/test_helpers"
 	"errors"
 	"io"
 	"os"

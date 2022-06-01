@@ -1,8 +1,8 @@
 package test_helpers
 
 import (
-	"auth/core/client_errors"
-	"auth/domain/entities"
+	"auth/internal/core/client_errors"
+	"auth/internal/domain/entities"
 	"encoding/json"
 	"io/ioutil"
 	"math/rand"

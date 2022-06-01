@@ -1,7 +1,7 @@
 package db_file_interactor_impl
 
 import (
-	"auth/domain/entities"
+	"auth/internal/domain/entities"
 	"encoding/json"
 	"errors"
 	"fmt"

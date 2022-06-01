@@ -1,8 +1,8 @@
 package bcrypt_hasher_test
 
 import (
-	"auth/core/crypto/bcrypt_hasher"
-	. "auth/test_helpers"
+	"auth/internal/core/crypto/bcrypt_hasher"
+	. "auth/internal/test_helpers"
 	"testing"
 	"testing/quick"
 )

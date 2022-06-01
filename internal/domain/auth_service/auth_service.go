@@ -1,10 +1,10 @@
 package auth_service
 
 import (
-	"auth/core/client_errors"
-	"auth/domain/auth_store_contract"
-	"auth/domain/entities"
-	"auth/values"
+	"auth/internal/core/client_errors"
+	"auth/internal/domain/auth_store_contract"
+	"auth/internal/domain/entities"
+	"auth/internal/values"
 	"errors"
 	"fmt"
 	"strings"

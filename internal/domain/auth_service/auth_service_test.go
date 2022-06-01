@@ -1,12 +1,12 @@
 package auth_service_test
 
 import (
-	"auth/core/client_errors"
-	"auth/domain/auth_service"
-	"auth/domain/auth_store_contract"
-	"auth/domain/entities"
-	. "auth/test_helpers"
-	"auth/values"
+	"auth/internal/core/client_errors"
+	"auth/internal/domain/auth_service"
+	"auth/internal/domain/auth_store_contract"
+	"auth/internal/domain/entities"
+	. "auth/internal/test_helpers"
+	"auth/internal/values"
 	"errors"
 	"testing"
 )

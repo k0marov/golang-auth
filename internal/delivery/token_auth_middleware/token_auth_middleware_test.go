@@ -1,11 +1,11 @@
 package token_auth_middleware_test
 
 import (
-	"auth/core/client_errors"
-	"auth/delivery/token_auth_middleware"
-	"auth/domain/entities"
-	"auth/domain/token_store_contract"
-	. "auth/test_helpers"
+	"auth/internal/core/client_errors"
+	"auth/internal/delivery/token_auth_middleware"
+	"auth/internal/domain/entities"
+	"auth/internal/domain/token_store_contract"
+	. "auth/internal/test_helpers"
 	"errors"
 	"net/http"
 	"net/http/httptest"

@@ -1,9 +1,9 @@
 package store
 
 import (
-	"auth/domain/auth_store_contract"
-	"auth/domain/entities"
-	"auth/domain/token_store_contract"
+	"auth/internal/domain/auth_store_contract"
+	"auth/internal/domain/entities"
+	"auth/internal/domain/token_store_contract"
 	"errors"
 	"fmt"
 
