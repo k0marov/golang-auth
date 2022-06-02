@@ -16,6 +16,8 @@ func NewTokenAuthMiddleware(tokenStore token_store_contract.TokenStore) *TokenAu
 	return &TokenAuthMiddleware{tokenStore}
 }
 
+type UserContextKey struct{}
+
 type TokenAuthMiddleware struct {
 	tokenStore token_store_contract.TokenStore
 }
@@ -37,7 +39,7 @@ func (t *TokenAuthMiddleware) Middleware(next http.Handler) http.Handler {
 				Id:       storedUser.Id,
 				Username: storedUser.Username,
 			}
-			newContext := context.WithValue(r.Context(), "User", user)
+			newContext := context.WithValue(r.Context(), UserContextKey{}, user)
 			next.ServeHTTP(w, r.WithContext(newContext))
 		} else {
 			throwUnauthorized(w, client_errors.AuthTokenRequiredError)
