@@ -50,7 +50,7 @@ func TestTokenAuthMiddleware(t *testing.T) {
 
 			assertCalls(t, spyHandler, 1)
 			updatedRequest := spyHandler.calls[0].r
-			userInContext := updatedRequest.Context().Value("User")
+			userInContext := updatedRequest.Context().Value(token_auth_middleware.UserKey)
 			Assert(t, userInContext.(entities.User), userWithThisToken, "user in context")
 		})
 		t.Run("error case (some database error happened)", func(t *testing.T) {

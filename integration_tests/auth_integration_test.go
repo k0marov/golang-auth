@@ -47,7 +47,7 @@ func TestAuthIntegration(t *testing.T) {
 		return baseAuthRequest(userData, "/register")
 	}
 	middleware := token_auth_middleware.NewTokenAuthMiddleware(store).Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(r.Context().Value("User"))
+		json.NewEncoder(w).Encode(r.Context().Value(token_auth_middleware.UserContextKey{}))
 	}))
 	requestMiddleware := func(token string) *httptest.ResponseRecorder {
 		request := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -97,7 +97,7 @@ func assertSuccessAndValidUser(t testing.TB, response *httptest.ResponseRecorder
 	Assert(t, response.Code, http.StatusOK, "response status code")
 	var user entities.User
 	json.NewDecoder(response.Body).Decode(&user)
-	Assert(t, user.Username, user.Username, "user's username")
+	Assert(t, user.Username, username, "user's username")
 }
 
 func assertSuccessAndGetToken(t testing.TB, response *httptest.ResponseRecorder) entities.Token {
