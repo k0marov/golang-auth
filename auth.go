@@ -13,7 +13,7 @@ import (
 	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
-type UserContextKey = token_auth_middleware.UserContextKey
+var UserContextKey = token_auth_middleware.UserContextKey{}
 
 func NewStoreImpl(dbFileName string) (*store.PersistentInMemoryFileStore, error) {
 	dbFile, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)

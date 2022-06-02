@@ -18,6 +18,8 @@ func NewTokenAuthMiddleware(tokenStore token_store_contract.TokenStore) *TokenAu
 
 type UserContextKey struct{}
 
+var UserKey = UserContextKey{}
+
 type TokenAuthMiddleware struct {
 	tokenStore token_store_contract.TokenStore
 }
