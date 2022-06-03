@@ -7,31 +7,30 @@ import (
 	"testing"
 
 	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/data/models"
 	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/mappers"
 	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
 	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestTokenAuthMiddleware(t *testing.T) {
 	var validToken = "abracadabra"
-	var storedUserWithThisToken = entities.StoredUser{
-		Id:         RandomString(),
+	var storedUserWithThisToken = models.UserModel{
+		Id:         RandomInt(),
 		Username:   "John",
 		StoredPass: RandomString(),
 		AuthToken:  entities.Token{Token: validToken},
 	}
-	var userWithThisToken = entities.User{
-		Id:       storedUserWithThisToken.Id,
-		Username: storedUserWithThisToken.Username,
-	}
+	var userWithThisToken = mappers.ModelToUser(storedUserWithThisToken)
 
 	store := &StubTokenStore{
-		findUserFromToken: func(token string) (entities.StoredUser, error) {
+		findUserFromToken: func(token string) (models.UserModel, error) {
 			if token == validToken {
 				return storedUserWithThisToken, nil
 			} else {
-				return entities.StoredUser{}, token_store_contract.TokenNotFoundErr
+				return models.UserModel{}, token_store_contract.TokenNotFoundErr
 			}
 		},
 	}
@@ -56,8 +55,8 @@ func TestTokenAuthMiddleware(t *testing.T) {
 		t.Run("error case (some database error happened)", func(t *testing.T) {
 			spyHandler := &SpyHTTPHandler{}
 			errorStore := &StubTokenStore{
-				findUserFromToken: func(string) (entities.StoredUser, error) {
-					return entities.StoredUser{}, errors.New(RandomString())
+				findUserFromToken: func(string) (models.UserModel, error) {
+					return models.UserModel{}, errors.New(RandomString())
 				},
 			}
 			middleware := createMiddleware(spyHandler, errorStore)
@@ -114,13 +113,13 @@ func (s *SpyHTTPHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 type StubTokenStore struct {
-	findUserFromToken func(string) (entities.StoredUser, error)
+	findUserFromToken func(string) (models.UserModel, error)
 }
 
-func (s *StubTokenStore) FindUserFromToken(token string) (entities.StoredUser, error) {
+func (s *StubTokenStore) FindUserFromToken(token string) (models.UserModel, error) {
 	if s.findUserFromToken != nil {
 		return s.findUserFromToken(token)
 	} else {
-		return entities.StoredUser{}, token_store_contract.TokenNotFoundErr
+		return models.UserModel{}, token_store_contract.TokenNotFoundErr
 	}
 }

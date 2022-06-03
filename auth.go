@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
 	"github.com/k0marov/golang-auth/internal/data/store"
@@ -16,11 +15,7 @@ import (
 var UserContextKey = token_auth_middleware.UserContextKey{}
 
 func NewStoreImpl(dbFileName string) (*store.PersistentInMemoryFileStore, error) {
-	dbFile, err := os.OpenFile(dbFileName, os.O_RDWR|os.O_CREATE, 0666)
-	if err != nil {
-		return nil, fmt.Errorf("problem opening %s %v", dbFileName, err)
-	}
-	fileInteractor := db_file_interactor_impl.NewDBFileInteractor(dbFile)
+	fileInteractor := db_file_interactor_impl.NewDBFileInteractor(dbFileName)
 
 	store, err := store.NewPersistentInMemoryFileStore(fileInteractor)
 	if err != nil {

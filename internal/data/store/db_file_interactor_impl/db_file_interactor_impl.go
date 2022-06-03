@@ -1,80 +1,87 @@
 package db_file_interactor_impl
 
 import (
-	"encoding/json"
-	"errors"
+	"encoding/csv"
 	"fmt"
-	"io"
 	"os"
-	"sync"
+	"strconv"
 
+	"github.com/k0marov/golang-auth/internal/data/models"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
-type sizeGetter interface {
-	Size() int64
-}
-
-// os.File is ok at implementing this
-type DBFile interface {
-	io.ReadWriteSeeker
-	Stat() (os.FileInfo, error)
-	Truncate(size int64) error
-}
-
 type DBFileInteractorImpl struct {
-	dbFile DBFile
-	mu     sync.Mutex
+	dbFileName string
 }
 
-func NewDBFileInteractor(dBFile DBFile) *DBFileInteractorImpl {
+func NewDBFileInteractor(dbFileName string) *DBFileInteractorImpl {
 	return &DBFileInteractorImpl{
-		dbFile: dBFile,
+		dbFileName: dbFileName,
 	}
 }
 
-func (d *DBFileInteractorImpl) ReadUsers() ([]entities.StoredUser, error) {
-	_, err := d.dbFile.Seek(0, 0)
+func (d *DBFileInteractorImpl) ReadUsers() ([]models.UserModel, error) {
+	dbFile, err := os.OpenFile(d.dbFileName, os.O_RDONLY|os.O_CREATE, 0666)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Error while seeking in ReadUsers(): %v", err))
+		return []models.UserModel{}, fmt.Errorf("error opening file while reading users: %w", err)
+	}
+	defer dbFile.Close()
+	csvReader := csv.NewReader(dbFile)
+	records, err := csvReader.ReadAll()
+	if err != nil {
+		return []models.UserModel{}, fmt.Errorf("got an error while reading users: %w", err)
 	}
 
-	var users []entities.StoredUser
-	err = json.NewDecoder(d.dbFile).Decode(&users)
-	if err != nil && err != io.EOF { // EOF is ok, just means an empty user list
-		return nil, errors.New(fmt.Sprintf("Error while decoding in ReadUsers(): %v", err))
+	users := []models.UserModel{}
+	for _, record := range records {
+		user, err := sliceToUserModel(record)
+		if err != nil {
+			return []models.UserModel{}, fmt.Errorf("error converting csv row to user model: %w", err)
+		}
+		users = append(users, user)
 	}
 	return users, nil
 }
 
-func (d *DBFileInteractorImpl) WriteUser(newUser entities.StoredUser) error {
-	d.mu.Lock()
-	defer d.mu.Unlock()
-
-	// a hack to improve performance:
-	// instead of rewriting the whole file, append newUser to the end of the JSON list
-	prepareForAppending(d.dbFile)
-	err := json.NewEncoder(d.dbFile).Encode(newUser)
+func (d *DBFileInteractorImpl) WriteUser(newUser models.UserModel) error {
+	dbFile, err := os.OpenFile(d.dbFileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
-		return errors.New(fmt.Sprintf("error while encoding in WriteUser(): %v", err))
+		return fmt.Errorf("error opening file writing appending user: %w", err)
 	}
-	addClosingBracket(d.dbFile)
+	defer dbFile.Close()
+	csvWriter := csv.NewWriter(dbFile)
 
+	record := []string{
+		strconv.Itoa(newUser.Id),
+		newUser.Username,
+		newUser.StoredPass,
+		newUser.AuthToken.Token,
+	}
+	err = csvWriter.Write(record)
+	if err != nil {
+		return fmt.Errorf("error writing record to csv: %w", err)
+	}
+	csvWriter.Flush()
+	if err = csvWriter.Error(); err != nil {
+		return fmt.Errorf("error flushing a record to csv: %w", err)
+	}
 	return nil
 }
 
-func prepareForAppending(dbFile DBFile) {
-	fi, _ := dbFile.Stat()
-	size := fi.Size()
-	if size > 0 {
-		dbFile.Truncate(size - 1) // remove the "]"
-		dbFile.Seek(0, io.SeekEnd)
-		dbFile.Write([]byte(", "))
-	} else {
-		dbFile.Write([]byte("[")) // add the "["
-	}
-}
+const numberOfModelFields = 4
 
-func addClosingBracket(dbFile DBFile) {
-	dbFile.Write([]byte("]"))
+func sliceToUserModel(slice []string) (models.UserModel, error) {
+	if len(slice) != numberOfModelFields {
+		return models.UserModel{}, fmt.Errorf("incorrect amount of columns in a csv row: %v", slice)
+	}
+	id, err := strconv.Atoi(slice[0])
+	if err != nil {
+		return models.UserModel{}, fmt.Errorf("error converting id to int: %w", err)
+	}
+	return models.UserModel{
+		Id:         id,
+		Username:   slice[1],
+		StoredPass: slice[2],
+		AuthToken:  entities.Token{Token: slice[3]},
+	}, nil
 }

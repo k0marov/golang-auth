@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/data/models"
 	"github.com/k0marov/golang-auth/internal/domain/auth_service"
 	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
@@ -14,8 +15,8 @@ import (
 
 type StubAuthStore struct {
 	userExists func(string) bool
-	createUser func(string, string, entities.Token) (entities.StoredUser, error)
-	findUser   func(string) (entities.StoredUser, error)
+	createUser func(string, string, entities.Token) (models.UserModel, error)
+	findUser   func(string) (models.UserModel, error)
 }
 
 func (s *StubAuthStore) UserExists(username string) bool {
@@ -25,18 +26,18 @@ func (s *StubAuthStore) UserExists(username string) bool {
 	return false
 }
 
-func (s *StubAuthStore) CreateUser(username string, hashedPassword string, token entities.Token) (entities.StoredUser, error) {
+func (s *StubAuthStore) CreateUser(username string, hashedPassword string, token entities.Token) (models.UserModel, error) {
 	if s.createUser != nil {
 		return s.createUser(username, hashedPassword, token)
 	}
-	return entities.StoredUser{}, nil
+	return models.UserModel{}, nil
 }
 
-func (s *StubAuthStore) FindUser(username string) (entities.StoredUser, error) {
+func (s *StubAuthStore) FindUser(username string) (models.UserModel, error) {
 	if s.findUser != nil {
 		return s.findUser(username)
 	}
-	return entities.StoredUser{}, auth_store_contract.UserNotFoundErr
+	return models.UserModel{}, auth_store_contract.UserNotFoundErr
 }
 
 type StubHasher struct {
@@ -166,9 +167,9 @@ func TestAuthService_Register(t *testing.T) {
 		t.Run("happy case", func(t *testing.T) {
 			createCalledWith := []createArgs{}
 			store := &StubAuthStore{
-				createUser: func(username string, password string, token entities.Token) (entities.StoredUser, error) {
+				createUser: func(username string, password string, token entities.Token) (models.UserModel, error) {
 					createCalledWith = append(createCalledWith, createArgs{username, password, token})
-					return entities.StoredUser{}, nil
+					return models.UserModel{}, nil
 				},
 			}
 
@@ -190,9 +191,9 @@ func TestAuthService_Register(t *testing.T) {
 		t.Run("hasher returns an error (do not create new user)", func(t *testing.T) {
 			createCalls := 0
 			store := &StubAuthStore{
-				createUser: func(username string, password string, token entities.Token) (entities.StoredUser, error) {
+				createUser: func(username string, password string, token entities.Token) (models.UserModel, error) {
 					createCalls++
-					return entities.StoredUser{}, nil
+					return models.UserModel{}, nil
 				},
 			}
 
@@ -212,8 +213,8 @@ func TestAuthService_Register(t *testing.T) {
 		})
 		t.Run("store returns an error", func(t *testing.T) {
 			store := &StubAuthStore{
-				createUser: func(username, password string, token entities.Token) (entities.StoredUser, error) {
-					return entities.StoredUser{}, errors.New(RandomString())
+				createUser: func(username, password string, token entities.Token) (models.UserModel, error) {
+					return models.UserModel{}, errors.New(RandomString())
 				},
 			}
 			hasher := StubHasher{}
@@ -250,15 +251,15 @@ func TestAuthService_Login(t *testing.T) {
 	hisPassHashed := RandomString()
 	hisToken := entities.Token{Token: RandomString()}
 	store := &StubAuthStore{
-		findUser: func(username string) (entities.StoredUser, error) {
+		findUser: func(username string) (models.UserModel, error) {
 			if username == existingUsername {
-				return entities.StoredUser{
+				return models.UserModel{
 					Username:   existingUsername,
 					StoredPass: hisPassHashed,
 					AuthToken:  hisToken,
 				}, nil
 			} else {
-				return entities.StoredUser{}, auth_store_contract.UserNotFoundErr
+				return models.UserModel{}, auth_store_contract.UserNotFoundErr
 			}
 		},
 	}

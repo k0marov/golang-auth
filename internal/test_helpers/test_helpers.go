@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/data/models"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
@@ -70,23 +71,22 @@ func AssertJSON(t testing.TB, response *httptest.ResponseRecorder) {
 	Assert(t, response.Result().Header.Get("contentType"), "application/json", "response content type")
 }
 
-func CreateTempFile(t testing.TB, initialData string) (*os.File, func()) {
+func CreateTempFile(t testing.TB, initialData string) (fileName string, deleteFile func()) {
 	t.Helper()
 
-	tmpfile, err := ioutil.TempFile("", "db")
-
+	tmpfile, err := ioutil.TempFile(".", "db")
+	name := tmpfile.Name()
+	tmpfile.Write([]byte(initialData))
 	if err != nil {
 		t.Fatalf("could not create temp file %v", err)
 	}
-
-	tmpfile.Write([]byte(initialData))
+	tmpfile.Close()
 
 	removeFile := func() {
-		tmpfile.Close()
 		os.Remove(tmpfile.Name())
 	}
 
-	return tmpfile, removeFile
+	return name, removeFile
 }
 
 type RandomUser struct {
@@ -111,6 +111,23 @@ func GenerateRandomUser() RandomUser {
 	}
 }
 
+func GenerateRandomUserModel() models.UserModel {
+	return GenerateRandomUserModels(1)[0]
+}
+
+func GenerateRandomUserModels(count int) (storedUsers []models.UserModel) {
+	randomUsers := GenerateRandomUsers(count)
+	for _, user := range randomUsers {
+		storedUsers = append(storedUsers, models.UserModel{
+			Id:         RandomInt(),
+			Username:   user.Username,
+			StoredPass: user.Password,
+			AuthToken:  user.Token,
+		})
+	}
+	return
+}
+
 func AssertUniqueCount[T comparable](t testing.TB, slice []T, want int) {
 	t.Helper()
 	unique := []T{}
@@ -129,6 +146,10 @@ func CheckInSlice[T comparable](elem T, slice []T) bool {
 		}
 	}
 	return false
+}
+
+func RandomInt() int {
+	return rand.Intn(100)
 }
 
 func RandomString() string {

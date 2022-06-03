@@ -8,7 +8,7 @@ import (
 )
 
 const HashCost = 10
-const dbFileName = "auth.db.json"
+const dbFileName = "auth.db.csv"
 
 func main() {
 	store, err := auth.NewStoreImpl(dbFileName)

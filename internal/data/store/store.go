@@ -1,19 +1,18 @@
 package store
 
 import (
-	"errors"
 	"fmt"
+	"sync"
 
+	"github.com/k0marov/golang-auth/internal/data/models"
 	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
 	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
-
-	"github.com/google/uuid"
 )
 
 type DBFileInteractor interface {
-	ReadUsers() ([]entities.StoredUser, error)
-	WriteUser(entities.StoredUser) error
+	ReadUsers() ([]models.UserModel, error)
+	WriteUser(models.UserModel) error
 }
 
 // An in-memory database is used here for 2 reasons:
@@ -21,22 +20,33 @@ type DBFileInteractor interface {
 // 2. The schema is quite light on memory - 50 MB of RAM is enough to hold 100 000+ users
 type PersistentInMemoryFileStore struct {
 	fileInteractor DBFileInteractor
-	usernameToUser map[string]*entities.StoredUser
-	tokenToUser    map[string]*entities.StoredUser
-	users          []entities.StoredUser
+
+	usernameToUser map[string]*models.UserModel
+	tokenToUser    map[string]*models.UserModel
+	users          []models.UserModel
+
+	biggestId int
+
+	mu sync.Mutex
 }
 
 func NewPersistentInMemoryFileStore(fileInteractor DBFileInteractor) (*PersistentInMemoryFileStore, error) {
 	users, err := fileInteractor.ReadUsers()
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Got an error while reading users from file interactor: %v", err))
+		return nil, fmt.Errorf("got an error while reading users from file interactor: %w", err)
 	}
-	usernameToUser := make(map[string]*entities.StoredUser)
-	tokenToUser := make(map[string]*entities.StoredUser)
+
+	biggestId := 0
+	usernameToUser := make(map[string]*models.UserModel)
+	tokenToUser := make(map[string]*models.UserModel)
 
 	for i := range users {
-		usernameToUser[users[i].Username] = &users[i]
-		tokenToUser[users[i].AuthToken.Token] = &users[i]
+		user := &users[i]
+		if user.Id > biggestId {
+			biggestId = user.Id
+		}
+		usernameToUser[user.Username] = user
+		tokenToUser[user.AuthToken.Token] = user
 	}
 
 	return &PersistentInMemoryFileStore{
@@ -44,15 +54,24 @@ func NewPersistentInMemoryFileStore(fileInteractor DBFileInteractor) (*Persisten
 		usernameToUser: usernameToUser,
 		tokenToUser:    tokenToUser,
 		users:          users,
+		biggestId:      biggestId,
 	}, nil
 }
 
-func (p *PersistentInMemoryFileStore) CreateUser(username, storedPass string, token entities.Token) (entities.StoredUser, error) {
-	newUser := entities.StoredUser{
-		Id:         generateId(),
+func (p *PersistentInMemoryFileStore) CreateUser(username, storedPass string, token entities.Token) (models.UserModel, error) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
+	newUser := models.UserModel{
+		Id:         p.biggestId + 1,
 		Username:   username,
 		StoredPass: storedPass,
 		AuthToken:  token,
+	}
+
+	err := p.fileInteractor.WriteUser(newUser)
+	if err != nil {
+		return models.UserModel{}, fmt.Errorf("got an error while writing to a file interactor: %w", err)
 	}
 
 	p.users = append(p.users, newUser)
@@ -61,31 +80,22 @@ func (p *PersistentInMemoryFileStore) CreateUser(username, storedPass string, to
 	p.usernameToUser[username] = newUserPtr
 	p.tokenToUser[token.Token] = newUserPtr
 
-	err := p.fileInteractor.WriteUser(newUser)
-	if err != nil {
-		return entities.StoredUser{}, errors.New(fmt.Sprintf("Got an error while writing to a file interactor: %v", err))
-	}
+	p.biggestId++
 
-	return newUser, nil // return a copy, so the caller isn't able to change the user directly
+	return newUser, nil // return a copy, so the caller is not able to change the user directly
 }
 
-func generateId() string {
-	// this actually never returns an error
-	id, _ := uuid.NewUUID()
-	return id.String()
-}
-
-func (p *PersistentInMemoryFileStore) FindUser(username string) (entities.StoredUser, error) {
+func (p *PersistentInMemoryFileStore) FindUser(username string) (models.UserModel, error) {
 	user, ok := p.usernameToUser[username]
 	if !ok {
-		return entities.StoredUser{}, auth_store_contract.UserNotFoundErr
+		return models.UserModel{}, auth_store_contract.UserNotFoundErr
 	}
 	return *user, nil
 }
-func (p *PersistentInMemoryFileStore) FindUserFromToken(token string) (entities.StoredUser, error) {
+func (p *PersistentInMemoryFileStore) FindUserFromToken(token string) (models.UserModel, error) {
 	user, ok := p.tokenToUser[token]
 	if !ok {
-		return entities.StoredUser{}, token_store_contract.TokenNotFoundErr
+		return models.UserModel{}, token_store_contract.TokenNotFoundErr
 	}
 	return *user, nil
 }

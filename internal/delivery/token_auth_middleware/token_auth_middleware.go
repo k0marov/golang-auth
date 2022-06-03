@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/mappers"
 	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
 )
 
@@ -37,10 +37,7 @@ func (t *TokenAuthMiddleware) Middleware(next http.Handler) http.Handler {
 				}
 				return
 			}
-			user := entities.User{
-				Id:       storedUser.Id,
-				Username: storedUser.Username,
-			}
+			user := mappers.ModelToUser(storedUser)
 			newContext := context.WithValue(r.Context(), UserContextKey{}, user)
 			next.ServeHTTP(w, r.WithContext(newContext))
 		} else {
