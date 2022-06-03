@@ -29,7 +29,11 @@ func TestAuthIntegration(t *testing.T) {
 	AssertNoError(t, err)
 
 	hasher := bcrypt_hasher.NewBcryptHasher(4)
-	service := auth_service.NewAuthServiceImpl(store, hasher)
+	successRegistrationCount := 0
+	registrationHandler := func(newUser entities.User) {
+		successRegistrationCount++
+	}
+	service := auth_service.NewAuthServiceImpl(store, hasher, registrationHandler)
 	server := server.NewAuthServer(service)
 
 	baseAuthRequest := func(userData values.AuthData, endpoint string) *httptest.ResponseRecorder {
@@ -77,6 +81,9 @@ func TestAuthIntegration(t *testing.T) {
 	response = requestRegister(values.AuthData{Username: username, Password: string(passwordHashed)})
 	registerToken := assertSuccessAndGetToken(t, response)
 
+	// check registration handler
+	Assert(t, successRegistrationCount, 1, "number of successful registrations")
+
 	// login into newly created account
 	response = requestLogin(values.AuthData{Username: username, Password: string(passwordHashed)})
 	loginToken := assertSuccessAndGetToken(t, response)
@@ -89,7 +96,6 @@ func TestAuthIntegration(t *testing.T) {
 	// check middleware with valid token
 	response = requestMiddleware(loginToken.Token)
 	assertSuccessAndValidUser(t, response, username)
-
 }
 
 func assertSuccessAndValidUser(t testing.TB, response *httptest.ResponseRecorder, username string) {

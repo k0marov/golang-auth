@@ -1,13 +1,13 @@
 package auth_service
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/k0marov/golang-auth/internal/core/client_errors"
 	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
 	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/mappers"
 	"github.com/k0marov/golang-auth/internal/values"
 
 	"github.com/google/uuid"
@@ -22,14 +22,20 @@ type Hasher interface {
 }
 
 type AuthServiceImpl struct {
-	store  AuthStore
-	hasher Hasher
+	store         AuthStore
+	hasher        Hasher
+	onNewRegister func(entities.User)
 }
 
-func NewAuthServiceImpl(store AuthStore, hasher Hasher) *AuthServiceImpl {
+// The onNewRegister function is called every time a new user is registered.
+// This function can be used, for example, for creating a User Profile in some other database.
+// It is called synchronously, which can be slow if it does something expensive.
+// So, if you don't need synchronous behavior for this handler, wrap the expensive operation in a goroutine
+func NewAuthServiceImpl(store AuthStore, hasher Hasher, onNewRegister func(entities.User)) *AuthServiceImpl {
 	return &AuthServiceImpl{
-		store:  store,
-		hasher: hasher,
+		store:         store,
+		hasher:        hasher,
+		onNewRegister: onNewRegister,
 	}
 }
 
@@ -46,13 +52,16 @@ func (s *AuthServiceImpl) Register(authData values.AuthData) (entities.Token, er
 
 	hashedPassword, err := s.hasher.Hash(authData.Password)
 	if err != nil {
-		return entities.Token{}, errors.New(fmt.Sprintf("Error while hashing password: %v", err))
+		return entities.Token{}, fmt.Errorf("error while hashing password: %w", err)
 	}
 	token := generateToken()
-	_, err = s.store.CreateUser(authData.Username, string(hashedPassword), token)
+	newUser, err := s.store.CreateUser(authData.Username, string(hashedPassword), token)
 	if err != nil {
-		return entities.Token{}, errors.New(fmt.Sprintf("Error while creating a new user: %v", err))
+		return entities.Token{}, fmt.Errorf("error while creating a new user: %w", err)
 	}
+
+	s.onNewRegister(mappers.ModelToUser(newUser))
+
 	return token, nil
 }
 

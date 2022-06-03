@@ -15,7 +15,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	srv, err := auth.NewAuthServerImpl(store, HashCost)
+	srv, err := auth.NewAuthServerImpl(store, HashCost, func(newUser auth.User) {
+		log.Printf("New user registered: %+v", newUser)
+	})
 	if err != nil {
 		log.Fatal(err)
 	}

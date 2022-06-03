@@ -24,9 +24,9 @@ func NewStoreImpl(dbFileName string) (*store.PersistentInMemoryFileStore, error)
 	return store, nil
 }
 
-func NewAuthServerImpl(store *store.PersistentInMemoryFileStore, hashCost int) (*server.AuthServer, error) {
+func NewAuthServerImpl(store *store.PersistentInMemoryFileStore, hashCost int, onNewRegister func(User)) (*server.AuthServer, error) {
 	hasher := bcrypt_hasher.NewBcryptHasher(hashCost)
-	service := auth_service.NewAuthServiceImpl(store, hasher)
+	service := auth_service.NewAuthServiceImpl(store, hasher, onNewRegister)
 	return server.NewAuthServer(service), nil
 }
 
