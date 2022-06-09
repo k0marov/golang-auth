@@ -3,10 +3,11 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"internal/core/client_errors"
-	"internal/domain/entities"
-	"internal/values"
 	"net/http"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 type AuthServiceMethod = func(values.AuthData) (entities.Token, error)

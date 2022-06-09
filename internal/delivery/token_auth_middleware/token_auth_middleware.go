@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"strings"
 
-	"internal/core/client_errors"
-	"internal/domain/mappers"
-	"internal/domain/token_store_contract"
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/mappers"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
 )
 
 func NewTokenAuthMiddleware(tokenStore token_store_contract.TokenStore) *TokenAuthMiddleware {

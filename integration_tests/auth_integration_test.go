@@ -7,10 +7,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"internal/core/client_errors"
-	"internal/domain/entities"
-	. "internal/test_helpers"
-	"internal/values"
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 
 	auth "github.com/k0marov/golang-auth"
 	"golang.org/x/crypto/bcrypt"

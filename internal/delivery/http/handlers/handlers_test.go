@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"internal/core/client_errors"
-	"internal/delivery/http/handlers"
-	"internal/domain/entities"
-	. "internal/test_helpers"
-	"internal/values"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/delivery/http/handlers"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 var goodAuthData = values.AuthData{

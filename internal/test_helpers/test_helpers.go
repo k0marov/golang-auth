@@ -9,9 +9,9 @@ import (
 	"reflect"
 	"testing"
 
-	"internal/core/client_errors"
-	"internal/data/models"
-	"internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/data/models"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 func Assert[T any](t testing.TB, got, want T, description string) bool {

@@ -4,8 +4,8 @@ import (
 	"testing"
 	"testing/quick"
 
-	"internal/core/crypto/bcrypt_hasher"
-	. "internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestBcryptHasher(t *testing.T) {

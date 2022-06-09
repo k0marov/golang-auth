@@ -4,14 +4,14 @@ import (
 	"errors"
 	"testing"
 
-	"internal/core/client_errors"
-	"internal/data/models"
-	"internal/domain/auth_service"
-	"internal/domain/auth_store_contract"
-	"internal/domain/entities"
-	"internal/domain/mappers"
-	. "internal/test_helpers"
-	"internal/values"
+	"github.com/k0marov/golang-auth/internal/core/client_errors"
+	"github.com/k0marov/golang-auth/internal/data/models"
+	"github.com/k0marov/golang-auth/internal/domain/auth_service"
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/mappers"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/values"
 )
 
 var dummyStore = &StubAuthStore{}

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"internal/core/crypto/bcrypt_hasher"
-	"internal/data/store"
-	"internal/data/store/db_file_interactor_impl"
-	"internal/delivery/http/handlers"
-	"internal/delivery/token_auth_middleware"
-	"internal/domain/auth_service"
-	"internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
+	"github.com/k0marov/golang-auth/internal/data/store"
+	"github.com/k0marov/golang-auth/internal/data/store/db_file_interactor_impl"
+	"github.com/k0marov/golang-auth/internal/delivery/http/handlers"
+	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
+	"github.com/k0marov/golang-auth/internal/domain/auth_service"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 var UserContextKey = token_auth_middleware.UserContextKey{}

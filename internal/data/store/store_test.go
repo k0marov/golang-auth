@@ -5,12 +5,12 @@ import (
 	"sync"
 	"testing"
 
-	"internal/data/models"
-	"internal/data/store"
-	"internal/domain/auth_store_contract"
-	"internal/domain/entities"
-	"internal/domain/token_store_contract"
-	. "internal/test_helpers"
+	"github.com/k0marov/golang-auth/internal/data/models"
+	"github.com/k0marov/golang-auth/internal/data/store"
+	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
+	. "github.com/k0marov/golang-auth/internal/test_helpers"
 )
 
 func TestPersistentInMemoryFileStore(t *testing.T) {

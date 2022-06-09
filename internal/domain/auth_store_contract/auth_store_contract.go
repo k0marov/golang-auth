@@ -3,8 +3,8 @@ package auth_store_contract
 import (
 	"errors"
 
-	"internal/data/models"
-	"internal/domain/entities"
+	"github.com/k0marov/golang-auth/internal/data/models"
+	"github.com/k0marov/golang-auth/internal/domain/entities"
 )
 
 type AuthStore interface {
