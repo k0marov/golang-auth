@@ -7,13 +7,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"auth"
-
 	"internal/core/client_errors"
 	"internal/domain/entities"
 	. "internal/test_helpers"
 	"internal/values"
 
+	auth "github.com/k0marov/golang-auth"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,24 +25,26 @@ func TestAuthIntegration(t *testing.T) {
 	}
 	bcryptCost := 4
 	successRegistrationCount := 0
-	server, err := auth.NewAuthServerImpl(store, bcryptCost, func(u auth.User) { successRegistrationCount++ })
+	loginHandler, registerHandler := auth.NewHandlersImpl(store, bcryptCost, func(auth.User) {
+		successRegistrationCount++
+	})
 	if err != nil {
-		t.Fatalf("error while opening server: %v", err)
+		t.Fatalf("error while creating login/register handlers: %v", err)
 	}
 
-	baseAuthRequest := func(userData values.AuthData, endpoint string) *httptest.ResponseRecorder {
+	handleRequest := func(userData values.AuthData, handler http.HandlerFunc) *httptest.ResponseRecorder {
 		body := bytes.NewBuffer(nil)
 		json.NewEncoder(body).Encode(userData)
-		request := httptest.NewRequest(http.MethodPost, endpoint, body)
+		request := httptest.NewRequest(http.MethodPost, "/url-should-not-be-used", body)
 		response := httptest.NewRecorder()
-		server.ServeHTTP(response, request)
+		handler.ServeHTTP(response, request)
 		return response
 	}
 	requestLogin := func(userData values.AuthData) *httptest.ResponseRecorder {
-		return baseAuthRequest(userData, "/login")
+		return handleRequest(userData, loginHandler)
 	}
 	requestRegister := func(userData values.AuthData) *httptest.ResponseRecorder {
-		return baseAuthRequest(userData, "/register")
+		return handleRequest(userData, registerHandler)
 	}
 	middleware := auth.NewTokenAuthMiddleware(store).Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(r.Context().Value(auth.UserContextKey))
