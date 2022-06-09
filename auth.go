@@ -2,11 +2,12 @@ package auth
 
 import (
 	"fmt"
+	"net/http"
 
 	"internal/core/crypto/bcrypt_hasher"
 	"internal/data/store"
 	"internal/data/store/db_file_interactor_impl"
-	"internal/delivery/server"
+	"internal/delivery/http/handlers"
 	"internal/delivery/token_auth_middleware"
 	"internal/domain/auth_service"
 	"internal/domain/entities"
@@ -24,10 +25,10 @@ func NewStoreImpl(dbFileName string) (*store.PersistentInMemoryFileStore, error)
 	return store, nil
 }
 
-func NewAuthServerImpl(store *store.PersistentInMemoryFileStore, hashCost int, onNewRegister func(User)) (*server.AuthServer, error) {
+func NewHandlersImpl(store *store.PersistentInMemoryFileStore, hashCost int, onNewRegister func(User)) (login http.Handler, register http.Handler) {
 	hasher := bcrypt_hasher.NewBcryptHasher(hashCost)
 	service := auth_service.NewAuthServiceImpl(store, hasher, onNewRegister)
-	return server.NewAuthServer(service), nil
+	return handlers.NewLoginHandler(service.Login), handlers.NewRegisterHandler(service.Register)
 }
 
 func NewTokenAuthMiddleware(store *store.PersistentInMemoryFileStore) *token_auth_middleware.TokenAuthMiddleware {
