@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/k0marov/golang-auth/internal/data/models"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"internal/data/models"
+	"internal/domain/entities"
 )
 
 type DBFileInteractorImpl struct {

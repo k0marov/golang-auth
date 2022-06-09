@@ -8,11 +8,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/delivery/server"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	. "github.com/k0marov/golang-auth/internal/test_helpers"
-	"github.com/k0marov/golang-auth/internal/values"
+	"internal/core/client_errors"
+	"internal/delivery/server"
+	"internal/domain/entities"
+	. "internal/test_helpers"
+	"internal/values"
 )
 
 type spyAuthService struct {

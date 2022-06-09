@@ -3,7 +3,7 @@ package token_store_contract
 import (
 	"errors"
 
-	"github.com/k0marov/golang-auth/internal/data/models"
+	"internal/data/models"
 )
 
 type TokenStore interface {

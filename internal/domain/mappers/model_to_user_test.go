@@ -3,11 +3,11 @@ package mappers_test
 import (
 	"testing"
 
-	"github.com/k0marov/golang-auth/internal/data/models"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	"github.com/k0marov/golang-auth/internal/domain/mappers"
+	"internal/data/models"
+	"internal/domain/entities"
+	"internal/domain/mappers"
 
-	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	. "internal/test_helpers"
 )
 
 func TestModelToUser(t *testing.T) {

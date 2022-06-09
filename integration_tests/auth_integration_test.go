@@ -7,16 +7,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/core/crypto/bcrypt_hasher"
-	"github.com/k0marov/golang-auth/internal/data/store"
-	"github.com/k0marov/golang-auth/internal/data/store/db_file_interactor_impl"
-	"github.com/k0marov/golang-auth/internal/delivery/server"
-	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
-	"github.com/k0marov/golang-auth/internal/domain/auth_service"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	. "github.com/k0marov/golang-auth/internal/test_helpers"
-	"github.com/k0marov/golang-auth/internal/values"
+	"auth"
+
+	"internal/core/client_errors"
+	"internal/domain/entities"
+	. "internal/test_helpers"
+	"internal/values"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -24,17 +20,16 @@ import (
 func TestAuthIntegration(t *testing.T) {
 	tempDB, closeDB := CreateTempFile(t, "")
 	defer closeDB()
-	dbFileInteractor := db_file_interactor_impl.NewDBFileInteractor(tempDB)
-	store, err := store.NewPersistentInMemoryFileStore(dbFileInteractor)
-	AssertNoError(t, err)
-
-	hasher := bcrypt_hasher.NewBcryptHasher(4)
-	successRegistrationCount := 0
-	registrationHandler := func(newUser entities.User) {
-		successRegistrationCount++
+	store, err := auth.NewStoreImpl(tempDB)
+	if err != nil {
+		t.Fatalf("error while opening a store: %v", err)
 	}
-	service := auth_service.NewAuthServiceImpl(store, hasher, registrationHandler)
-	server := server.NewAuthServer(service)
+	bcryptCost := 4
+	successRegistrationCount := 0
+	server, err := auth.NewAuthServerImpl(store, bcryptCost, func(u auth.User) { successRegistrationCount++ })
+	if err != nil {
+		t.Fatalf("error while opening server: %v", err)
+	}
 
 	baseAuthRequest := func(userData values.AuthData, endpoint string) *httptest.ResponseRecorder {
 		body := bytes.NewBuffer(nil)
@@ -50,8 +45,8 @@ func TestAuthIntegration(t *testing.T) {
 	requestRegister := func(userData values.AuthData) *httptest.ResponseRecorder {
 		return baseAuthRequest(userData, "/register")
 	}
-	middleware := token_auth_middleware.NewTokenAuthMiddleware(store).Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(r.Context().Value(token_auth_middleware.UserContextKey{}))
+	middleware := auth.NewTokenAuthMiddleware(store).Middleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		json.NewEncoder(w).Encode(r.Context().Value(auth.UserContextKey))
 	}))
 	requestMiddleware := func(token string) *httptest.ResponseRecorder {
 		request := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -63,7 +58,7 @@ func TestAuthIntegration(t *testing.T) {
 
 	username := "sam_komarov"
 	password := "very_strong_password"
-	passwordHashed, _ := bcrypt.GenerateFromPassword([]byte(password), 4)
+	passwordHashed, _ := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
 
 	// check middleware with invalid token
 	response := requestMiddleware("abracadabra")

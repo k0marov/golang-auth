@@ -6,13 +6,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/data/models"
-	"github.com/k0marov/golang-auth/internal/delivery/token_auth_middleware"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	"github.com/k0marov/golang-auth/internal/domain/mappers"
-	"github.com/k0marov/golang-auth/internal/domain/token_store_contract"
-	. "github.com/k0marov/golang-auth/internal/test_helpers"
+	"internal/core/client_errors"
+	"internal/data/models"
+	"internal/delivery/token_auth_middleware"
+	"internal/domain/entities"
+	"internal/domain/mappers"
+	"internal/domain/token_store_contract"
+	. "internal/test_helpers"
 )
 
 func TestTokenAuthMiddleware(t *testing.T) {

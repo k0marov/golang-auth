@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	"github.com/k0marov/golang-auth/internal/values"
+	"internal/core/client_errors"
+	"internal/domain/entities"
+	"internal/values"
 )
 
 type AuthService interface {

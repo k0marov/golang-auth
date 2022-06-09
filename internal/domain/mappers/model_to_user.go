@@ -3,8 +3,8 @@ package mappers
 import (
 	"strconv"
 
-	"github.com/k0marov/golang-auth/internal/data/models"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
+	"internal/data/models"
+	"internal/domain/entities"
 )
 
 func ModelToUser(model models.UserModel) entities.User {

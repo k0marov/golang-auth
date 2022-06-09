@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/k0marov/golang-auth/internal/core/client_errors"
-	"github.com/k0marov/golang-auth/internal/domain/auth_store_contract"
-	"github.com/k0marov/golang-auth/internal/domain/entities"
-	"github.com/k0marov/golang-auth/internal/domain/mappers"
-	"github.com/k0marov/golang-auth/internal/values"
+	"internal/core/client_errors"
+	"internal/domain/auth_store_contract"
+	"internal/domain/entities"
+	"internal/domain/mappers"
+	"internal/values"
 
 	"github.com/google/uuid"
 )
