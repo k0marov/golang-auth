@@ -1,4 +1,4 @@
-github.com/k0marov/golang-auth v0.0.0-20220609124711-99957f73921d h1:3wpf5zvBtSYCv0Ao3ZU6ZV5zruLLyp6UOpvxDnz20ho=
-github.com/k0marov/golang-auth v0.0.0-20220609124711-99957f73921d/go.mod h1:r7H4MVx9Y2U9qMnXy2AVpHS6PabHFtKfyLFuarpjylk=
+github.com/k0marov/golang-auth v0.0.0-20220609160628-c376872b8f92 h1:FI6mwMKIba6c8xN6U2p22Tb4gWvDS9dGOBRG5Yd7ggs=
+github.com/k0marov/golang-auth v0.0.0-20220609160628-c376872b8f92/go.mod h1:88TtwLzBMAV4sY3emds5Dz3xb8hCppDE/V/84a4uhd0=
 golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e h1:T8NU3HyQ8ClP4SEE+KbFlg6n0NhuTsN4MyznaarGsZM=
 golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
