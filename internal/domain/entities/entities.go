@@ -1,7 +1,7 @@
 package entities
 
 type Token struct {
-	Token string
+	Token string `json:"token"`
 }
 
 type User struct {
