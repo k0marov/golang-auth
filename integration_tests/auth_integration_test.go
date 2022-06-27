@@ -69,10 +69,6 @@ func TestAuthIntegration(t *testing.T) {
 	response = requestLogin(values.AuthData{Username: username, Password: string(passwordHashed)})
 	assertClientError(t, response, client_errors.InvalidCredentialsError, http.StatusBadRequest)
 
-	// try to register with non-client hashed password
-	response = requestRegister(values.AuthData{Username: username, Password: password})
-	assertClientError(t, response, client_errors.UnhashedPasswordError, http.StatusBadRequest)
-
 	// register with hashed password
 	response = requestRegister(values.AuthData{Username: username, Password: string(passwordHashed)})
 	registerToken := assertSuccessAndGetToken(t, response)

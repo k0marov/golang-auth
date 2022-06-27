@@ -49,31 +49,6 @@ func TestAuthService_Register(t *testing.T) {
 		})
 
 	})
-	t.Run("should check if password is client-side hashed", func(t *testing.T) {
-		// arrange
-		pass := RandomString()
-		hashedPass := RandomString()
-		hasher := StubHasher{
-			isHashed: func(pass string) bool {
-				return pass == hashedPass
-			},
-		}
-
-		// happy case
-		service := auth_service.NewAuthServiceImpl(dummyStore, hasher, silentRegisterHandler)
-		_, err := service.Register(values.AuthData{
-			Username: RandomString(),
-			Password: hashedPass,
-		})
-		AssertNoError(t, err)
-		// error case
-		service = auth_service.NewAuthServiceImpl(dummyStore, hasher, panickingRegisterHandler)
-		_, err = service.Register(values.AuthData{
-			Username: RandomString(),
-			Password: pass,
-		})
-		Assert[error](t, err, client_errors.UnhashedPasswordError, "expected error")
-	})
 	t.Run("should check if username is valid (contains proper characters)", func(t *testing.T) {
 		AssertUniqueCount(t, []byte(auth_service.ValidUsernameChars), 10+26*2+1)
 		cases := []struct {

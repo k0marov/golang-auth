@@ -16,7 +16,6 @@ import (
 type AuthStore = auth_store_contract.AuthStore
 
 type Hasher interface {
-	IsHashed(password string) bool
 	Hash(password string) (string, error)
 	Compare(pass, hashedPass string) bool
 }
@@ -45,9 +44,6 @@ func (s *AuthServiceImpl) Register(authData values.AuthData) (entities.Token, er
 	}
 	if s.store.UserExists(authData.Username) {
 		return entities.Token{}, client_errors.UsernameAlreadyTakenError
-	}
-	if !s.hasher.IsHashed(authData.Password) {
-		return entities.Token{}, client_errors.UnhashedPasswordError
 	}
 
 	hashedPassword, err := s.hasher.Hash(authData.Password)

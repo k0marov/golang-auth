@@ -14,11 +14,6 @@ var InvalidJsonError = ClientError{
 	ReadableDetail: "The provided request body is not valid JSON.",
 }
 
-var UnhashedPasswordError = ClientError{
-	DetailCode:     "unhashed-password",
-	ReadableDetail: "The provided password is not client-side hashed. Please hash it and try again (better with a new password).",
-}
-
 var UsernameAlreadyTakenError = ClientError{
 	DetailCode:     "username-taken",
 	ReadableDetail: "A user with that username already exists.",
