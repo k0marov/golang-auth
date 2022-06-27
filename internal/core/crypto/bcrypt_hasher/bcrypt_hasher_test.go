@@ -12,15 +12,14 @@ func TestBcryptHasher(t *testing.T) {
 	t.Run("property based test", func(t *testing.T) {
 		hasher := bcrypt_hasher.NewBcryptHasher(5)
 		assertion := func(pass string) bool {
-			// random string must be considered not hashed
-			if hasher.IsHashed(pass) {
+			if hasher.Compare(pass, RandomString()) {
+				return false
+			}
+			if hasher.Compare(RandomString(), pass) {
 				return false
 			}
 			hashedPass, err := hasher.Hash(pass)
 			if err != nil {
-				return false
-			}
-			if !hasher.IsHashed(hashedPass) {
 				return false
 			}
 			if !hasher.Compare(pass, hashedPass) {

@@ -15,11 +15,6 @@ func NewBcryptHasher(hashCost int) *BcryptHasher {
 	return &BcryptHasher{hashCost: hashCost}
 }
 
-func (b BcryptHasher) IsHashed(pass string) bool {
-	_, err := bcrypt.Cost([]byte(pass))
-	return err == nil
-}
-
 func (b BcryptHasher) Hash(pass string) (string, error) {
 	hashedPassBytes, err := bcrypt.GenerateFromPassword([]byte(pass), b.hashCost)
 	if err != nil {
