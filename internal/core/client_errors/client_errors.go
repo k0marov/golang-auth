@@ -1,8 +1,8 @@
 package client_errors
 
 type ClientError struct {
-	ReadableDetail string
-	DetailCode     string
+	ReadableDetail string `json:"readable_detail"`
+	DetailCode     string `json:"detail_code"`
 }
 
 func (ce ClientError) Error() string {
